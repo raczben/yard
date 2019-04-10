@@ -1,0 +1,17 @@
+%YAML 1.2
+---
+common:
+  include: ~
+  indentUnit: "    "
+  pageWidth: 100
+  dataWidth: 32
+  headerName: 'yard.h'
+  headerGuardDefine: __YARD_H__
+  registers: []
+  addressDefines: []
+jobs:
+  sourceBase:
+    templateFile: "templates/tcl_basic.tcl.mako"
+    outFilename: basic_source.tcl
+    beautifierFunc: tclBeautifierSimple
+    renderdata: ~

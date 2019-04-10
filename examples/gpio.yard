@@ -1,0 +1,60 @@
+%YAML 1.2
+---
+name: gpio
+configuration:
+  include: ~
+  hdl:
+    rtlPath: "gpio/src"
+    simPath: "/gpio/sim"
+    tbPath: "/gpio/tb"
+    rtlLibrary: yard_gpio_lib
+    tbLibrary: yard_gpio_lib
+    indentunit: "  "
+    pagewidth: 100
+  software:
+    path: "/gpio/sw"
+  documentation:
+    path: "/gpio/doc"
+    moduleTemplate:
+    - "/../templates/docx/moduleregistermap-template.docx"
+    - "/../templates/docx/registerdescription-template.docx"
+interfaces:
+- name: axi
+  type: AXI
+  description:
+  - Control/Status register interface.
+  registers:
+  - name: data
+    address: -1
+    access: RW
+    location: core
+    brief: Data register.
+    detail:
+    - Data on the port
+  - name: dir
+    address: -1
+    access: RW
+    type: std_logic_vector
+    reset: '0x0'
+    width: 32
+    location: pif
+    brief: port direction register
+    description:
+    - port direction register
+  - name: IRQ
+    access: RO
+    reset: 0x0
+    hasReadEvent: true
+    brief: interrupt register
+    description:
+    - interrupt register
+  - name: IRQ_mask
+    address: -1
+    access: RW
+    type: std_logic_vector
+    reset: '0x0'
+    width: 32
+    location: pif
+    brief: port direction register
+    description:
+    - port direction register

@@ -1,0 +1,53 @@
+%YAML 1.2
+---
+common:
+  include: ~
+  rtlPath: "<model_file>/src"
+  simPath: "<model_file>/sim"
+  tbPath: "<model_file>/tb"
+  rtlLibrary: yard_lib
+  tbLibrary: yard_lib
+  indentUnit: "  "
+  pageWidth: 100
+
+jobs:
+  pif:
+    templateFile: "templates/axi_basic_pif.vhd.mako"
+    outFilename: yard_pif.vhd
+    beautifierFunc: hdl_indent
+    renderdata:
+      dataWidth: 32
+      addressWidth: 12
+      entityName: yard_pif
+      ports: []
+      signals: []
+      writeRegisters: []
+      readRegisters: []
+      readEvents: []
+      writeEnables: []
+      IOAssignments: []
+  core:
+    templateFile: "templates/axi_basic_core.vhd.mako"
+    outFilename: yard_core.vhd
+    beautifierFunc: hdl_indent
+    renderdata:
+      dataWidth: 32
+      addressWidth: 12
+      entityName: yard_core
+      ports: []
+      signals: []
+      writeRegisters: []
+      IOAssignments: []
+  top:
+    templateFile: "templates/axi_basic_top.vhd.mako"
+    outFilename: yard_top.vhd
+    beautifierFunc: hdl_indent
+    renderdata:
+      coreEntityName: yard_core
+      pifEntityName: yard_pif
+      dataWidth: 32
+      addressWidth: 12
+      entityName: yard_top
+      signals: []
+      pifPortAssignments: []
+      corePortAssignments: []

@@ -1,0 +1,66 @@
+%YAML 1.2
+---
+name: stride_test
+configuration:
+  include: ~
+  hdl:
+    rtlPath: "stride_test/src"
+    simPath: "/stride_test/sim"
+    tbPath: "/stride_test/tb"
+    rtlLibrary: yard_stride_test_lib
+    tbLibrary: yard_stride_test_lib
+    indentunit: "  "
+    pagewidth: 100
+  software:
+    path: "/stride_test/sw"
+  documentation:
+    path: "/stride_test/doc"
+    moduleTemplate:
+    - "/../templates/docx/moduleregistermap-template.docx"
+    - "/../templates/docx/registerdescription-template.docx"
+interfaces:
+- name: axi
+  type: AXI
+  description:
+  - Control/Status register interface.
+  registers:
+  - name: full_spec_reg
+    address: 0:stride:4:0x100
+    access: RW
+    brief:
+    - Full specified stride register.
+    detail:
+    - This register is just for testing the stride capabilities of the YARD.
+    
+  - name: auto_start_reg1
+    address: -1:stride:4:0x100
+    access: RW
+    brief:
+    - Automatic start address register I.
+    detail:
+    - This register is just for testing the stride capabilities of the YARD.
+    
+  - name: auto_start_reg2
+    address: -1:stride:4:0x100
+    access: RW
+    brief:
+    - Automatic start address register II.
+    detail:
+    - This register is just for testing the stride capabilities of the YARD.
+    
+  - name: auto_start_auto_step_reg1
+    address: -1:stride:4
+    access: RW
+    brief:
+    - Automatic start address register I.
+    detail:
+    - This register is just for testing the stride capabilities of the YARD.
+    
+  - name: auto_start_auto_step_reg2
+    address: -1:stride:4
+    access: RW
+    brief:
+    - Automatic start address register II.
+    detail:
+    - This register is just for testing the stride capabilities of the YARD.
+    

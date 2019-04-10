@@ -1,0 +1,23 @@
+%YAML 1.2
+---
+common:
+  include: ~
+  indentUnit: "    "
+  pageWidth: 100
+  dataWidth: 32
+  headerName: 'yard.h'
+  addressType: 'dword_t*'
+  dataType: 'dword_t'
+  headerGuardDefine: __YARD_H__
+  registers: []
+jobs:
+  sourceBase:
+    templateFile: "templates/c_basic_source.c.mako"
+    outFilename: basic_source.c
+    beautifierFunc: cBeautifierGoogle
+    renderdata: ~
+  headerBase:
+    templateFile: "templates/c_basic_header.h.mako"
+    outFilename: basic_header.h
+    beautifierFunc: cBeautifierGoogle
+    renderdata: ~

@@ -1,0 +1,22 @@
+%YAML 1.2
+---
+name: ~
+configuration:
+  include: ~
+  rtlPath: "<model_file>/src"
+  simPath: "<model_file>/sim"
+  tbPath: "<model_file>/tb"
+  rtlLibrary: yard_lib
+  tbLibrary: yard_lib
+  indentunit: "  "
+  pagewidth: 100
+datawidth: 32
+addresswidth: 12
+entityname: yard
+ports: []
+signals: []
+writeregisters: []
+readregisters: []
+readeventsignals: []
+writeenablesignals: []
+assignments: []

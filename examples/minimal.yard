@@ -1,0 +1,11 @@
+%YAML 1.2
+---
+name: minimal
+interfaces:
+- name: axi
+  type: AXI
+  description:
+  - Control/Status register interface.
+  registers:
+  - name: data
+    access: RW
