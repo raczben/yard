@@ -1,37 +1,34 @@
 source regutil.tcl
 
-
+namespace eval ${commondata['name']} {
 % for addrDef in commondata['addressDefines']:
-  set ${addrDef['addressDefineName']} ${addrDef['address']}
+  variable ${addrDef['addressDefineName']} ${addrDef['address']}
 % endfor
+}
 
 % for reg in commondata['registers']:
     % if reg['setter'] is not None:
         proc ${reg['setter']['functionName']} { baseAddr data } {
-            global ${reg['addressDefineName']}
-            wr_reg $baseAddr $${reg['addressDefineName']} $data
+            wr_reg $baseAddr $::${commondata['name']}::${reg['addressDefineName']} $data
         }
     % endif
     
     % if reg['getter'] is not None:
         proc ${reg['getter']['functionName']} { baseAddr } {
-            global ${reg['addressDefineName']}
-            return [rd_reg $baseAddr $${reg['addressDefineName']}]
+            return [rd_reg $baseAddr $::${commondata['name']}::${reg['addressDefineName']}]
     }
     % endif
     
     % for bf in reg['bitFields']:
         % if bf['setter']:
             proc ${bf['setter']['functionName']} { baseAddr data } {
-                global ${reg['addressDefineName']}
-                wr_reg_bf $baseAddr $${reg['addressDefineName']} ${bf['start']} ${bf['length']} $data
+                wr_reg_bf $baseAddr $::${commondata['name']}::${reg['addressDefineName']} ${bf['start']} ${bf['length']} $data
             }
         % endif
         
         % if bf['getter']:
             proc ${bf['getter']['functionName']} { baseAddr } {
-                global ${reg['addressDefineName']}
-                return [rd_reg_bf $baseAddr $${reg['addressDefineName']} ${bf['start']} ${bf['length']}]
+                return [rd_reg_bf $baseAddr $::${commondata['name']}::${reg['addressDefineName']} ${bf['start']} ${bf['length']}]
             }
         % endif
     % endfor

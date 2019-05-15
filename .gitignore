@@ -1,6 +1,8 @@
 # ignore temp or copy files
 ~*.*
 
+AUTHORS
+ChangeLog
 
 
 #
