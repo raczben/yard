@@ -16,12 +16,12 @@ def toInt(s):
             
     
 import re
-alphabets= "([A-Za-z])"
-prefixes = "(Mr|St|Mrs|Ms|Dr)[.]"
-suffixes = "(Inc|Ltd|Jr|Sr|Co)"
-starters = "(Mr|Mrs|Ms|Dr|He\s|She\s|It\s|They\s|Their\s|Our\s|We\s|But\s|However\s|That\s|This\s|Wherever)"
-acronyms = "([A-Z][.][A-Z][.](?:[A-Z][.])?)"
-websites = "[.](com|net|org|io|gov)"
+alphabets= r"([A-Za-z])"
+prefixes = r"(Mr|St|Mrs|Ms|Dr)[.]"
+suffixes = r"(Inc|Ltd|Jr|Sr|Co)"
+starters = r"(Mr|Mrs|Ms|Dr|He\s|She\s|It\s|They\s|Their\s|Our\s|We\s|But\s|However\s|That\s|This\s|Wherever)"
+acronyms = r"([A-Z][.][A-Z][.](?:[A-Z][.])?)"
+websites = r"[.](com|net|org|io|gov)"
 
 def split_into_sentences(text):
     text = " " + text + "  "

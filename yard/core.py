@@ -24,7 +24,7 @@ from mako.lookup import TemplateLookup
 from mako.exceptions import RichTraceback
 
 # import YARD modules
-import util
+from . import util
 
 # To run standalone we need to add this module to pythonpath.
 yard_module_path = os.path.dirname(os.path.abspath(__file__))
@@ -869,6 +869,10 @@ class DataBase():
         
     @staticmethod
     def _init_defaults(defaultFile='cfg/yard_defaults.yard'):
+        '''
+        Loads the default settigs of the DataBase. Later these settings will be filled empty
+        paramteres, which was not defined by the user.
+        '''
         if not DataBase._defaults_loaded:
             filename = os.path.join(resourcepath, 'cfg/yard_defaults.yard')
             with open(filename) as f:

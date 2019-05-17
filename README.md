@@ -10,29 +10,8 @@ needed sources and documentation for a register interface, like:
  
  
 ## **Install**
-I hope that yard can be installed from https://pypi.org/ (via `easy_install`) but now you need to
-download from github, and install.
 
-### **Download**
-`git clone https://github.com/raczben/yard.git`
-
-Then enter into the repo
-
-**OR**
-
-Download zipped archive: https://github.com/raczben/yard/archive/master.zip
-
-Extract and enter the directory, where this README located.
-
-### **Install**
-After you entered the repo:
-
-`easy_install .`
-
-Note, that YARD requires python3 (I've tested with both 3.6 and 3.7) so, if pure `easy_install`
-command runs the 2.7 version you need to choose the 3.x version by hand, like:
-
-`python3 -m easy_install .`
+`pip install yard-fpga`
 
 ### **Running**
 If `<python>/bin` is added to your `PATH` you can run YARD simply with `yard` command. If not, you
@@ -81,6 +60,8 @@ Yardfile above is the bare-minimal version of yardfiles.
     
 For more regiser fields see examples or documentation under the doc direcotry.
 
+
+---
 ## **Dev**
 First I must thank you if you plan to make any improovements in YARD. Here is a short guide to start
 to understand whats under the hood.
@@ -89,13 +70,44 @@ to understand whats under the hood.
 TBD.
 
 ### **Delivery**
-TBD.
 
+Yard repo uses [setuptools][2] and [pbr][3] for project administration, versioning and releasing.
+
+**Before** creating a new distribution it is recommended to clean git repository first `git clean -dxf`
+to be sure to pack those files that you want. Because *pbr* derives all version from the latest *tag*
+of the git repository, to create a new version you need to commit and tag the repository.
+
+To create a new distribution run the following command:
+
+`setup.py sdist`
+
+Now you have a packed source distribution of the project in the *./dist/* folder. You can test it
+installing locally.
+
+To upload new distribution to pypi:
+
+`twine  upload ./dist/yard* -r testpypi`
+
+To test installation of the new version's test-upload:
+
+`pip install yard-fpga -i https://test.pypi.org/simple`
+
+To upload new distribution to pypi:
+
+`twine  upload ./dist/yard*`
+
+To test installation of the new version's test-upload:
+
+`pip install yard-fpga`
+
+---
 ## **License**
 Note, that YARD is under [GPL-3.0][1] license, which means that all generated files *can* be used in
 commertial products. However any improovments or modifications of this YARD project must be
 published / distributed.
 
+[2]: https://pypi.org/project/setuptools/
+[3]: https://pypi.org/project/pbr/
 [1]: https://github.com/raczben/yard/blob/master/LICENSE
 
 
