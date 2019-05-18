@@ -136,8 +136,12 @@ def tclBeautifierSimple(src, indentUnit='  '):
                 logging.error('depth > 16')
        
     return ret
+   
+ 
+class YardException(Exception):
+    pass
 
-
+    
 class Decorator():
     
     def __init__(self, caseMode=None, separator='_'):
@@ -869,8 +873,7 @@ class DataBase():
         
     @staticmethod
     def _init_defaults(defaultFile='cfg/yard_defaults.yard'):
-        '''
-        Loads the default settigs of the DataBase. Later these settings will be filled empty
+        ''' Loads the default settigs of the DataBase. Later these settings will be filled empty
         paramteres, which was not defined by the user.
         '''
         if not DataBase._defaults_loaded:
@@ -881,6 +884,8 @@ class DataBase():
         
         
     def loadDefaults(self, gently=True, defaultFile='cfg/yard_defaults.yard'):
+        """ Fill all fields with default values which was not defined previously (in the .yard file)
+        """
         self._init_defaults(defaultFile)
         
         defaults = copy.deepcopy(self._defaults)
@@ -902,14 +907,19 @@ class DataBase():
         """ returns the datawidth of given interface. (This will be the default
         width of the registers)
         """
-        ifacetype = self.data['interfaces'][ifid]['type']
+        try:
+            ifacetype = self.data['interfaces'][ifid]['type']
+        except IndexError:
+            logging.error('No interface with ID: ' + str(ifid))
+            raise YardException('No interface with ID: ' + str(ifid))
+            
         if ifacetype.lower() in ['axi', 'axi32', 'axi-32']:
             return 32
         elif ifacetype.lower() in ['axi64', 'axi-64']:
             return 64
         else:
             logging.error('Unknown interface type')
-            raise Exception
+            raise YardException('Unknown interface type')
         
         
     def _mapAddressRegister(self, reg, test=False):
@@ -977,6 +987,10 @@ class DataBase():
         `None` or `-1` address value (ind the yard file) means 'auto' the addresses. This method
         will resolve (give valid integers) for these register address.
         """
+        
+        # First map all explicitly set address, to prevent overlap auto-set address.
+        self.mapAddresses()
+        
         nextAddr = 0
         granulity = int(self.getDatawidth(0)/8)
         # let assume that all address are presetted, so set addressDirthy=False
