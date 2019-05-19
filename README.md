@@ -1,6 +1,10 @@
 # **YARD**
 *Yet Another Register Designer*
 
+[![Build Status](https://travis-ci.org/raczben/yard.svg?branch=dev)](https://travis-ci.org/raczben/yard)
+[![codecov](https://codecov.io/gh/raczben/yard/branch/dev/graph/badge.svg)](https://codecov.io/gh/raczben/yard/)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
 Yard is a register interface generator tool for processor controlled FPGA system. Yard generates all
 needed sources and documentation for a register interface, like:
  - HDL sources
