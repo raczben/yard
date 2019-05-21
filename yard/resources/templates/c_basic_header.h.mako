@@ -1,7 +1,9 @@
 #ifndef ${commondata['headerGuardDefine']}
 #define ${commondata['headerGuardDefine']}
 
-#include "io_util.h"
+#define __DTYPE_32__
+
+#include "regutil.h"
 #include "${commondata['headerName']}"
 
 % for reg in commondata['registers']:

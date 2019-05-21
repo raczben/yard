@@ -13,6 +13,7 @@ Created on Fri Mar 22 12:46:42 2019
 import os
 import sys
 import copy
+import shutil
 
 # Import 3th party modules:
 #  - yaml parse and write yaml (yard) files
@@ -295,6 +296,11 @@ class Generator():
         """
         self.renderJobs[0]['renderdata'] = self.db
         
+    def preRender(self):
+        pass
+        
+    def postRender(self):
+        pass
         
     def render(self, renderJobs=None):
         """ Does the render. 
@@ -303,6 +309,8 @@ class Generator():
         if renderJobs is not None:
             self.renderJobs = renderJobs
             
+        self.preRender()
+        
         for k, job in self.renderJobs['jobs'].items():
             try:
                 #
@@ -349,6 +357,8 @@ class Generator():
                     print(line, "\n")
                 print("%s: %s" % (str(traceback.error.__class__.__name__), traceback.error))
                 raise
+        
+        self.postRender()
                 
                 
     def exportRenderJobs(self):
@@ -716,6 +726,10 @@ class CBaseGenerator(Generator):
                     
                 self.renderJobs['common']['registers'].append(regData)
 
+    def postRender(self):
+        src = os.path.join(resourcepath, 'include', 'regutil.h')
+        dst = os.path.join(self.db.get_yard_file_folder(), self.renderJobs['jobs']['headerBase']['destinationPath'], 'regutil.h')
+        shutil.copyfile(src, dst)
    
 class TCLBaseGenerator(Generator):
 
@@ -856,6 +870,7 @@ class DataBase():
             self.addressDirthy= other.addressDirthy
             self.data         = other.data
             self.addressMap   = other.addressMap
+            self.yard_file    = other.yard_file
             return 
             
         if yard_file is not None:
@@ -867,8 +882,7 @@ class DataBase():
         self.loadDefaults()
         
     def get_yard_file_folder(self):
-        logging.debug(self.yard_file) 
-        return os.path.dirname(self.yard_file)
+        return os.path.dirname(os.path.abspath(self.yard_file))
         
     def __getitem__(self, key):
         return self.data[key]

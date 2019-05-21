@@ -44,6 +44,7 @@ def generate_c_file(fname):
     logging.info("  Starting render...")
     gen.render()
      
+     
 def syntax_check(fname):
     errFile = '~stderr.txt'
     outFile = '~stdout.txt'
@@ -63,8 +64,8 @@ def test_minimal():
     generate_c_file('minimal.yard')
     
     # Check that files has been generated:
-    headerpath = 'src/basic_header.h'
-    srcpath = 'src/basic_source.c'
+    headerpath = 'examples/src/basic_header.h'
+    srcpath = 'examples/src/basic_source.c'
     assert os.path.isfile(headerpath) 
     assert os.path.isfile(srcpath) 
     
