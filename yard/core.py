@@ -48,6 +48,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #MIT_LICENSE = fmt_comment(MIT_LICENSE)
 
+def is_debug():
+    return logging.getLogger().level == logging.DEBUG
+
 '''
 
 '''
@@ -78,7 +81,7 @@ def hdl_indent(hdl, indentUnit='  '):
 def cBeautifierGoogle(src, indentUnit='  '):
     """ simple identation method for C codes.
     """
-    import code_style_check
+    from . import code_style_check
     lines = src.splitlines()
     code_style_check._CheckCodeStyle(lines)
        
@@ -217,7 +220,9 @@ class Controller():
         self.db.resolveAddress()
         
         logging.info("Starting dumping...")
-        self.db.export()
+        
+        if is_debug():
+            self.db.export()
             
         for k, trg in self.db['targets'].items():
             logging.info("Starting rendering %s ", k)
@@ -227,7 +232,8 @@ class Controller():
             logging.info("  Starting generateRenderData...")
             gen.generateRenderData()
             
-            gen.exportRenderJobs()
+            if is_debug():
+                gen.exportRenderJobs()
             
             logging.info("  Starting render...")
             gen.render()
@@ -329,7 +335,7 @@ class Generator():
                 generated_code = method_to_call(generated_code, indentUnit=indentUnit)
                 
                 # save file:
-                outdir=self.db['configuration']['hdl']['rtlPath']
+                outdir=os.path.join(self.db.get_yard_file_folder(), job['destinationPath'])
                 os.makedirs(outdir, exist_ok=True)
                 filename =  job['outFilename']
                 outfile = os.path.abspath(os.path.join(outdir, filename))
@@ -342,11 +348,13 @@ class Generator():
                     print("File %s, line %s, in %s" % (filename, lineno, function))
                     print(line, "\n")
                 print("%s: %s" % (str(traceback.error.__class__.__name__), traceback.error))
+                raise
                 
                 
     def exportRenderJobs(self):
         genType = self.__class__.__name__
         filename = '~{}_{}_rjobs.yaml'.format(self.db['name'], genType)
+        filename = os.path.join(self.db.get_yard_file_folder(), filename)
         logging.info("  Dumping reder jobs into %s ...", filename)
         yaml.Dumper.ignore_aliases = lambda *args : True
         with open(filename, 'w') as f:    
@@ -544,7 +552,8 @@ class AxiGenerator(Generator):
         #
         
         logging.info("  Generating common and default fields...")
-        self.renderJobs['common'] = {**self.renderJobs['common'], **self.db['configuration']['hdl']}
+        self.renderJobs['common'] = {**self.renderJobs['common']}
+        # self.renderJobs['common'] = {**self.renderJobs['common'], **self.db['configuration']['hdl']}
         
         # PIF
         pifdata = self.renderJobs['jobs']['pif']['renderdata']
@@ -664,7 +673,8 @@ class CBaseGenerator(Generator):
         #
         
         # Source
-        sourcedata = {**self.renderJobs['common'], **self.db['configuration']['software']}
+        sourcedata = {**self.renderJobs['common']}
+        # sourcedata = {**self.renderJobs['common'], **self.db['configuration']['software']}
         sourcedata['dataWidth'] = self.db.getDatawidth(0)
         self.renderJobs['common'] = sourcedata
         
@@ -705,10 +715,6 @@ class CBaseGenerator(Generator):
                     regData['getter']['functionName'] = self.decorateGetterFunctionName(reg)
                     
                 self.renderJobs['common']['registers'].append(regData)
-                
-        yaml.Dumper.ignore_aliases = lambda *args : True
-        with open('~c_renderdata.yaml', 'w') as f:    
-            f.write(yaml.dump(self.renderJobs))
 
    
 class TCLBaseGenerator(Generator):
@@ -755,7 +761,8 @@ class TCLBaseGenerator(Generator):
         #
         
         # Source
-        sourcedata = {**self.renderJobs['common'], **self.db['configuration']['software']}
+        # sourcedata = {**self.renderJobs['common'], **self.db['configuration']['software']}
+        sourcedata = {**self.renderJobs['common']}
         sourcedata['dataWidth'] = self.db.getDatawidth(0)
         self.renderJobs['common'] = sourcedata
         
@@ -821,29 +828,26 @@ class TCLBaseGenerator(Generator):
                             bfData['getter']['functionName'] = self.decorateBFGetter(reg, bf)
                             
                         regData['bitFields'].append(bfData)
-                
-        yaml.Dumper.ignore_aliases = lambda *args : True
-        with open('~c_renderdata.yaml', 'w') as f:    
-            f.write(yaml.dump(self.renderJobs))
-   
+
     
 class DataBase():
     _defaults = None
     _defaults_loaded = False
     
     
-    def __init__(self, datafile=None, other=None):
+    def __init__(self, yard_file=None, other=None):
         """ Initialize the generator class.
         other or filename must given to DataBase
     
         Keyword arguments:
-        datafile -- filepath for (raw) yard data
+        yard_file -- filepath for (raw) yard data
         other -- copies data from other
         """
         
         self.dataDirthy=True
         self.addressDirthy=True
         self.data={}
+        self.yard_file=yard_file
         self.addressMap={}
         self._init_defaults()
         
@@ -854,14 +858,17 @@ class DataBase():
             self.addressMap   = other.addressMap
             return 
             
-        if datafile is not None:
-            with open(datafile) as f:
+        if yard_file is not None:
+            with open(yard_file) as f:
                 self.data = yaml.safe_load(f)
             return
         
         # If no data or file given
         self.loadDefaults()
         
+    def get_yard_file_folder(self):
+        logging.debug(self.yard_file) 
+        return os.path.dirname(self.yard_file)
         
     def __getitem__(self, key):
         return self.data[key]
@@ -1205,6 +1212,8 @@ class DataBase():
                 filename = '~' + self.data['name'] + '_dirtyDB.yaml'
             else:
                 filename = '~' + self.data['name'] + '_DB.yaml'
+                
+        filename = os.path.join(self.get_yard_file_folder(), filename)
             
         logging.debug('Exporting to file: %s', filename)
         yaml.Dumper.ignore_aliases = lambda *args : True

@@ -70,8 +70,58 @@ For more regiser fields see examples or documentation under the doc direcotry.
 First I must thank you if you plan to make any improovements in YARD. Here is a short guide to start
 to understand whats under the hood.
 
+### **Processing stages**
+Following chapters will describe the main behaviour of yard.
+
+ 1. Reading descriptor (*.yard)
+ 2. Filling all fields
+ 3. Generating sources
+ 
+    1. Generating rjobs
+    2. Template rendering
+    3. Beautifying
+
+
+#### **Reading descriptor**
+First yard reads the descriptor `*.yard` file, which contains all (custom) information to generate
+all source code. This descriptor contains eg.: the name of the module, the registers, and bitfields.
+
+This step reads the descriptor into the `Database` (defined in the `core.py`).
+
+#### **Filling all fields**
+The next stage is fill all defaults and derived values. There are a huge amount of parameters, which
+aren't filled by the user. There are some obvious parameters, which would require redundant `*.yard`
+file. (Eg.: The defauld type of the register in HDL is vector type ie.: std_logic_vector. This
+parameter filled by automaticly in this step.)
+
+Other parameters can be derived from other values. (Eg.: If we want to implement a RW register it
+should be located in the pif not in the core.)
+
+Also all register adress should be resolved at this time.
+
+This step creates a full detailed `Database`. In debug mode `~<modulename>_DB.yaml` will exported
+countaining this, full detailed database next to the user descriptor `*.yard` file.
+
+#### **Generating sources**
+
+This step runs for each generating source file. This step consists of multiple sub-parts:
+ 1. First yard generates a source dependent data structure, called *render-jobs* (aka. *rjobs*). This
+    sub-step derive values from the full-detailed-Database and generates a custom database for the
+    given sourcefile. (If the given source file generation is not a complicated, this step can be
+    ignored.) ~minimal_CBaseGenerator_rjobs.yaml In debug mode `~<modulename>_<generatorClassname>_rjobs.yaml`
+    will exported, countaining the data of renderjobs next to the user descriptor `*.yard` file.
+ 2. Then *template rendering* starts. This sub-step starts the mako's template renderer with the
+    rjobs data. This outputs the generated sourcefile.
+ 3. Beautifier is an optional sub-step, because it doesn't add any functional stuff to code,
+    it just indents/beautify the generated code. However it is a recommended step, because mako's template
+    engine cannot handle both well indened template file (which is required by the debvelopers) and 
+    the well indened rendered source files (which is required by the users) This sub-step handles this.
+
+---
 ### **Test**
-TBD.
+Run unittests with the following command:
+
+`pytest --cov=yard`
 
 ### **Delivery**
 
@@ -107,8 +157,8 @@ To test installation of the new version's test-upload:
 ---
 ## **License**
 Note, that YARD is under [GPL-3.0][1] license, which means that all generated files *can* be used in
-commertial products. However any improovments or modifications of this YARD project must be
-published / distributed.
+commertial products for free, at your own risk. However any improovments or modifications of this
+YARD project must be published / distributed.
 
 [2]: https://pypi.org/project/setuptools/
 [3]: https://pypi.org/project/pbr/

@@ -6,29 +6,32 @@ generalDefaults:
     software:
       generatorClass: CBaseGenerator
       rollOutArrays: false
+      copyUtil: True
+      destinationFolder: sw
     hardware:
       generatorClass: AxiGenerator
       rollOutArrays: true
+      destinationFolder: hdl
+      library: yard_lib
+    # hardwareSim:
+      # generatorClass: ~
+      # rollOutArrays: true
+      # destinationFolder: sim
+      # library: yard_lib
     testTCL:
       generatorClass: TCLBaseGenerator
       rollOutArrays: true
+      copyUtil: true
+      destinationFolder: tcl
+    # documentation:
+      # path: "doc"
+      # moduleTemplate:
+      # - "/../templates/docx/moduleregistermap-template.docx"
+      # - "/../templates/docx/registerdescription-template.docx"
   configuration:
     include: ~
-    hdl:
-      rtlPath: "yard/src"
-      simPath: "/yard/sim"
-      tbPath: "/yard/tb"
-      rtlLibrary: yard_gpio_lib
-      tbLibrary: yard_gpio_lib
-      indentUnit: "  "
-      pageWidth: 100
-    software:
-      path: "/yard/sw"
-    documentation:
-      path: "/yard/doc"
-      moduleTemplate:
-      - "/../templates/docx/moduleregistermap-template.docx"
-      - "/../templates/docx/registerdescription-template.docx"
+    indentUnit: "  "
+    pageWidth: 100
   interfaces: []
       
 interfaceDefaults:

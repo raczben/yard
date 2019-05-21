@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <stdint.h>
 
+// Guard:
+#ifndef __REGUTIL_H__
+#define __REGUTIL_H__
+
 #ifdef __DTYPE_8__
     typedef uint8_t dword_t;
 #endif
@@ -95,3 +99,5 @@ int main(){
     printf("\n");
     return 0;
 }
+
+#endif  // ifdef __REGUTIL_H__

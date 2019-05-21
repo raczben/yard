@@ -15,6 +15,7 @@ jobs:
     templateFile: "templates/axi_basic_pif.vhd.mako"
     outFilename: yard_pif.vhd
     beautifierFunc: hdl_indent
+    destinationPath: hdl
     renderdata:
       dataWidth: 32
       addressWidth: 12
@@ -30,6 +31,7 @@ jobs:
     templateFile: "templates/axi_basic_core.vhd.mako"
     outFilename: yard_core.vhd
     beautifierFunc: hdl_indent
+    destinationPath: hdl
     renderdata:
       dataWidth: 32
       addressWidth: 12
@@ -42,6 +44,7 @@ jobs:
     templateFile: "templates/axi_basic_top.vhd.mako"
     outFilename: yard_top.vhd
     beautifierFunc: hdl_indent
+    destinationPath: hdl
     renderdata:
       coreEntityName: yard_core
       pifEntityName: yard_pif

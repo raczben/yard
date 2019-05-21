@@ -12,12 +12,15 @@ common:
   registers: []
 jobs:
   sourceBase:
+    destinationPath: src
     templateFile: "templates/c_basic_source.c.mako"
     outFilename: basic_source.c
     beautifierFunc: cBeautifierGoogle
     renderdata: ~
   headerBase:
+    destinationPath: src
     templateFile: "templates/c_basic_header.h.mako"
     outFilename: basic_header.h
     beautifierFunc: cBeautifierGoogle
     renderdata: ~
+    
