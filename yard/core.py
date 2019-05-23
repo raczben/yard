@@ -784,6 +784,7 @@ class TCLBaseGenerator(Generator):
         sourcedata = {**self.renderJobs['common']}
         sourcedata['dataWidth'] = self.db.getDatawidth(0)
         self.renderJobs['common'] = sourcedata
+        self.renderJobs['common']['namespaceName'] = self.db['name']
         
         self.renderJobs['jobs']['sourceBase']['outFilename'] = self.db['name']+'.tcl'
         
@@ -848,6 +849,11 @@ class TCLBaseGenerator(Generator):
                             
                         regData['bitFields'].append(bfData)
 
+    def postRender(self):
+        src = os.path.join(resourcepath, 'include', 'regutil.tcl')
+        dst = os.path.join(self.db.get_yard_file_folder(), self.renderJobs['jobs']['sourceBase']['destinationPath'], 'regutil.tcl')
+        shutil.copyfile(src, dst)
+   
     
 class DataBase():
     _defaults = None
