@@ -5,6 +5,7 @@ import pytest
 import os
 import logging 
 import subprocess
+import shutil
 
 import yard.core
 
@@ -59,17 +60,38 @@ def syntax_check(fname):
     # Raise error if the error file isn't empty:
     # assert os.stat(errFile).st_size == 0
     
+def functional_check(dirname):
+    src = os.path.join('test', 'minimal_main.c')
+    dst = os.path.join(dirname, 'minimal_main.c')
+    shutil.copyfile(src, dst)
+
+    srcfiles = ['minimal_main.c', 'minimal.c']
+    srcfiles = ' '.join([os.path.join(dirname, x) for x in srcfiles])
+    cmd = 'gcc -o minimal {}'.format(srcfiles)
+    
+    # Pytest asserts the non-zero return status of subprocess
+    out = subprocess.check_output(cmd.split(' '))
+    
+    # Run the compiled test program:
+    out = subprocess.check_output("./minimal")
+    
 
 def test_minimal():
     generate_c_file('minimal.yard')
     
     # Check that files has been generated:
-    headerpath = 'examples/src/basic_header.h'
-    srcpath = 'examples/src/basic_source.c'
+    headerpath = 'examples/src/minimal.h'
+    srcpath = 'examples/src/minimal.c'
     assert os.path.isfile(headerpath) 
     assert os.path.isfile(srcpath) 
     
     syntax_check(srcpath)
+    
+    functional_check('examples/src')
+    
+    shutil.rmtree('examples/src')
+    os.remove('minimal.o')
+    os.remove('minimal')
     
     
     

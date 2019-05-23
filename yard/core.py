@@ -696,7 +696,11 @@ class CBaseGenerator(Generator):
         # We go threw each registers and generate all files (PIF, CORE, TOP) parallel
         #
         
+        self.renderJobs['jobs']['headerBase']['outFilename'] = self.db['name'] + '.h'
+        self.renderJobs['jobs']['sourceBase']['outFilename'] = self.db['name'] + '.c'
         self.renderJobs['common']['headerGuardDefine'] = self.defDecorator.decorate(self.db['name'], '_', '_')
+        
+        self.renderJobs['common']['headerName'] = self.renderJobs['jobs']['headerBase']['outFilename']
         
         for iface in self.db['interfaces']:
             for reg in iface['registers']:
@@ -715,6 +719,7 @@ class CBaseGenerator(Generator):
                 regData['addressDefineValue'] = reg['parsedAddress']['value'][0]
                 
                 regData['addressIncrement'] = reg['parsedAddress']['increment']
+                regData['isArray'] = reg['parsedAddress']['increment'] > 0
                 
                 if reg['access'] in ['RW', 'WO']:
                     # Generate setter data:

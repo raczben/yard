@@ -4,7 +4,6 @@
 #define __DTYPE_32__
 
 #include "regutil.h"
-#include "${commondata['headerName']}"
 
 % for reg in commondata['registers']:
     #define ${reg['addressDefineName']} ${hex(reg['addressDefineValue'])}
@@ -15,16 +14,19 @@
 
 
 % for reg in commondata['registers']:
-    % if reg['setter'] is not None:
-        void ${reg['setter']['functionName']}(${commondata['addressType']} baseAddr, ${commondata['dataType']} data);
-    % endif
-    \
-    % if reg['setter'] is not None:
-        void ${reg['setter']['functionName']}(${commondata['addressType']} baseAddr, int ch, ${commondata['dataType']} data);
+    % if reg['isArray']:
+        % if reg['setter'] is not None:
+            void ${reg['setter']['functionName']}(${commondata['addressType']} baseAddr, int ch, ${commondata['dataType']} data);
+        % endif
+        \
+    % else:
+        % if reg['setter'] is not None:
+            void ${reg['setter']['functionName']}(${commondata['addressType']} baseAddr, ${commondata['dataType']} data);
+        % endif
     % endif
     \
     % if reg['getter'] is not None:
-    ${commondata['dataType']} ${reg['getter']['functionName']}(${commondata['addressType']} baseAddr);
+        ${commondata['dataType']} ${reg['getter']['functionName']}(${commondata['addressType']} baseAddr);
     % endif
     \
     % for bf in reg['bitFields']:

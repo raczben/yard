@@ -85,7 +85,7 @@
     BF_GET(READ_REG(BaseAddress, RegOffset), start, len)
 
     
-    
+    /*
 int main(){
     int i;
     dword_t arr[] = {1, 2, 0, 4, 0, 6, 7, 8, 9};
@@ -99,5 +99,6 @@ int main(){
     printf("\n");
     return 0;
 }
+*/
 
 #endif  // ifdef __REGUTIL_H__
