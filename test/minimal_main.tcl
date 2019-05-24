@@ -12,7 +12,7 @@ variable BASE_ADDR 100
 #
 proc rd_reg {baseAddress regOffset} {
     global mem
-    return [lindex mem [expr $baseAddress + $regOffset - $::BASE_ADDR]]
+    return [lindex $mem [expr $baseAddress + $regOffset - $::BASE_ADDR]]
 }
 
 
@@ -32,14 +32,14 @@ proc main {} {
     set_data $::BASE_ADDR 1
     assertt [get_data $::BASE_ADDR] 1 "get_data $::BASE_ADDR != 1"
     
-    set_data(::BASE_ADDR, 0);
+    set_data $::BASE_ADDR 0
     assertt [get_data $::BASE_ADDR] 0 "get_data $::BASE_ADDR != 0"
     
-    set_data(::BASE_ADDR, 123456);
+    set_data $::BASE_ADDR 123456
     assertt [get_data $::BASE_ADDR] 123456 "get_data $::BASE_ADDR != 123456"
     
     # Success
-    puts "[PASS]"
+    puts "\[PASS\]"
     return 0
 }
 
