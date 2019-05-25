@@ -141,6 +141,75 @@ def test_array():
         assert pAddr['start'] == 0x1C
         assert pAddr['value'] == [0x1c, 0x1c+4, 0x1c+8, 0x1c+12]
     
+
+def test_array_roll_out():
+    array_yard = os.path.join(repo_root, 'examples', 'array_test.yard')
+    db = yard.core.DataBase(array_yard)
+    assert db['name'] == 'array_test'
+
+    db.fillAllFields()
+    db.resolveAddress()
+    db.rollOutStride()
+    
+    for iface in db['interfaces']:
+        registers = iface['registers']
+        
+        # full_spec_reg
+        # 0:array:4:0x100
+        for i, full_spec_reg in zip(range(0, 4), registers[0:4]):
+            assert full_spec_reg['name'] == 'full_spec_reg'
+            pAddr = full_spec_reg['parsedAddress']
+            assert pAddr['count'] == -1
+            assert pAddr['increment'] == -1
+            assert pAddr['serialNumber'] == i
+            assert pAddr['start'] == [0, 0x100, 0x200, 0x300][i]
+            assert pAddr['value'] == [[0, 0x100, 0x200, 0x300][i]]
+        
+        # auto_start_reg1
+        # -1:array:4:0x100
+        for i, auto_start_reg1 in zip(range(0, 4), registers[4:8]):
+            assert auto_start_reg1['name'] == 'auto_start_reg1'
+            pAddr = auto_start_reg1['parsedAddress']
+            assert pAddr['count'] == -1
+            assert pAddr['increment'] == -1
+            assert pAddr['serialNumber'] == i
+            assert pAddr['start'] == [4, 0x104, 0x204, 0x304][i]
+            assert pAddr['value'] == [[4, 0x104, 0x204, 0x304][i]]
+        
+        # auto_start_reg2
+        # -1:array:4:0x100
+        for i, auto_start_reg2 in zip(range(0, 4), registers[8:12]):
+            assert auto_start_reg2['name'] == 'auto_start_reg2'
+            pAddr = auto_start_reg2['parsedAddress']
+            assert pAddr['count'] == -1
+            assert pAddr['increment'] == -1
+            assert pAddr['serialNumber'] == i
+            assert pAddr['start'] == [8, 0x108, 0x208, 0x308][i]
+            assert pAddr['value'] == [[8, 0x108, 0x208, 0x308][i]]
+        
+        # auto_start_auto_step_reg1
+        # -1:array:4
+        for i in range(4):
+            auto_start_auto_step_reg1 = registers[i+12]
+            assert auto_start_auto_step_reg1['name'] == 'auto_start_auto_step_reg1'
+            pAddr = auto_start_auto_step_reg1['parsedAddress']
+            assert pAddr['count'] == -1
+            assert pAddr['increment'] == -1
+            assert pAddr['serialNumber'] == i
+            assert pAddr['start'] == [0xc, 0xc+4, 0xc+8, 0xc+12][i]
+            assert pAddr['value'] == [[0xc, 0xc+4, 0xc+8, 0xc+12][i]]
+        
+        # auto_start_auto_step_reg2
+        # -1:array:4
+        for i in range(4):
+            auto_start_auto_step_reg2 = registers[i+16]
+            assert auto_start_auto_step_reg2['name'] == 'auto_start_auto_step_reg2'
+            pAddr = auto_start_auto_step_reg2['parsedAddress']
+            assert pAddr['count'] == -1
+            assert pAddr['increment'] == -1
+            assert pAddr['serialNumber'] == i
+            assert pAddr['start'] == [0x1c, 0x1c+4, 0x1c+8, 0x1c+12][i]
+            assert pAddr['value'] == [[0x1c, 0x1c+4, 0x1c+8, 0x1c+12][i]]
     
 def test_bitfields():
     util.copy_to_work_dir(work_dir, 'examples/bitfields.yard')

@@ -1141,10 +1141,11 @@ class DataBase():
         
         This is useful when the template/renderjob does not supporst array-registers natively.
         """
+        new_reg_list = []
+        
         for iface in self.data['interfaces']:
             for reg in iface['registers']:
                 if isinstance(reg['parsedAddress']['value'], list) and len(reg['parsedAddress']['value'])>1:
-                    iface['registers'].remove(reg)
                     for i, addressValue in enumerate(reg['parsedAddress']['value']):
                         regSN = copy.deepcopy(reg)
                         regSN['parsedAddress']['value'] = [reg['parsedAddress']['value'][i]]
@@ -1152,7 +1153,11 @@ class DataBase():
                         regSN['parsedAddress']['count'] = -1
                         regSN['parsedAddress']['increment'] = -1
                         regSN['parsedAddress']['serialNumber'] = i
-                        iface['registers'].insert(i, regSN)
+                        new_reg_list.append(regSN)
+                else:
+                    new_reg_list.append(reg)
+        iface['registers'] = new_reg_list
+        
 
         
     def fillAllFields(self, data=None):
