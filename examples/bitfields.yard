@@ -1,0 +1,93 @@
+%YAML 1.2
+---
+name: bitfields
+interfaces:
+- name: axi
+  type: AXI
+  description:
+  - This module shows the capabilities of the bitfields.
+  registers:
+  - name: fruits
+    access: RW
+    fields:
+    - name: 'apple'
+      position: 0
+      brief: 'Apple at 0'
+      detail: 'Apple bit located at the LSB.'
+    - name: 'blueberry'
+      position: '4:2'
+      
+  - name: staccato
+    access: R
+    fields:
+    - name: aa
+      position: 0
+    - name: ab
+      position: 1
+    - name: ac
+      position: 2
+    - name: ad
+      position: 3
+    - name: ae
+      position: 4
+    - name: af
+      position: 5
+    - name: ag
+      position: 6
+    - name: ah
+      position: 7
+    - name: ai
+      position: 8
+    - name: aj
+      position: 9
+    - name: ak
+      position: 10
+    - name: al
+      position: 11
+    - name: am
+      position: 12
+    - name: an
+      position: 13
+    - name: ao
+      position: 14
+    - name: ap
+      position: 15
+    - name: aq
+      position: 16
+    - name: ar
+      position: 17
+    - name: as
+      position: 18
+    - name: at
+      position: 19
+    - name: au
+      position: 20
+    - name: av
+      position: 21
+    - name: aw
+      position: 22
+    - name: ax
+      position: 23
+    - name: ay
+      position: 24
+    - name: az
+      position: 25
+    - name: ba
+      position: 26
+    - name: bb
+      position: 27
+    - name: bc
+      position: 28
+    - name: bd
+      position: 29
+    - name: be
+      position: 30
+    - name: bf
+      position: 31
+      
+  - name: legato
+    access: R
+    fields:
+    - name: abcdefghijklmnopqrstuvwxyz
+      position: '31:0'
+      access: WO

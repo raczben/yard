@@ -3,11 +3,15 @@ Test util functions
 """
 import pytest
 import os
+import logging 
+
+from . import util
 
 import yard.core
 
 here = os.path.abspath(os.path.join(__file__, os.pardir))
 repo_root = os.path.abspath(os.path.join(here, os.pardir))
+work_dir = '.test/core'
 
 '''
 --------------------------------------
@@ -136,5 +140,51 @@ def test_array():
         assert pAddr['serialNumber'] == -1
         assert pAddr['start'] == 0x1C
         assert pAddr['value'] == [0x1c, 0x1c+4, 0x1c+8, 0x1c+12]
+    
+    
+def test_bitfields():
+    util.copy_to_work_dir(work_dir, 'examples/bitfields.yard')
+    
+    bitfields_yard = os.path.join(work_dir, 'bitfields.yard')
+    db = yard.core.DataBase(bitfields_yard)
+    assert db['name'] == 'bitfields'
+
+    logging.info("Starting fill all fields...")
+    db.fillAllFields()
+    
+    logging.info("Starting dumping...")
+    db.export()
+    
+    for iface in db['interfaces']:
+        registers = iface['registers']
+        fruit_reg = registers[0]
+        apple_bf = fruit_reg['fields'][0]
+        assert apple_bf['name'] == 'apple'
+        assert apple_bf['brief'] == 'Apple at 0'
+        assert apple_bf['detail'] == 'Apple bit located at the LSB.'
+        assert apple_bf['_positionLength'] == 1
+        assert apple_bf['_positionStart'] == 0
+        assert apple_bf['access'] == 'RW'
+        
+        blueberry_bf = fruit_reg['fields'][1]
+        assert blueberry_bf['name'] == 'blueberry'
+        assert blueberry_bf['_positionStart'] == 2
+        assert blueberry_bf['_positionLength'] == 3
+        assert blueberry_bf['access'] == 'RW'
+        
+        staccato_reg = registers[1]
+        for i in range(32):
+            bf = staccato_reg['fields'][i]
+            assert bf['access'] == 'R'
+            assert bf['name'] == chr(ord('a') + int(i/26)) + chr(ord('a') + i%26)
+            assert bf['_positionLength'] == 1
+            assert bf['_positionStart'] == i
+            
+        legato_reg = registers[2]
+        bf = legato_reg['fields'][0]
+        assert bf['access'] == 'WO'
+        assert bf['name'] == 'abcdefghijklmnopqrstuvwxyz'
+        assert bf['_positionLength'] == 32
+        assert bf['_positionStart'] == 0
     
     
