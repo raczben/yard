@@ -71,10 +71,10 @@ def test_fillAllFields():
     assert db['interfaces'][0]['registers'][0]['type'] == 'std_logic_vector'
 
 
-def test_stride():
-    stride_yard = os.path.join(repo_root, 'examples', 'stride_test.yard')
-    db = yard.core.DataBase(stride_yard)
-    assert db['name'] == 'stride_test'
+def test_array():
+    array_yard = os.path.join(repo_root, 'examples', 'array_test.yard')
+    db = yard.core.DataBase(array_yard)
+    assert db['name'] == 'array_test'
 
     db.fillAllFields()
     db.resolveAddress()
@@ -83,7 +83,7 @@ def test_stride():
         registers = iface['registers']
         
         # full_spec_reg
-        # 0:stride:4:0x100
+        # 0:array:4:0x100
         full_spec_reg = registers[0]
         assert full_spec_reg['name'] == 'full_spec_reg'
         pAddr = full_spec_reg['parsedAddress']
@@ -94,7 +94,7 @@ def test_stride():
         assert pAddr['value'] == [0, 0x100, 0x200, 0x300]
         
         # auto_start_reg1
-        # -1:stride:4:0x100
+        # -1:array:4:0x100
         auto_start_reg1 = registers[1]
         assert auto_start_reg1['name'] == 'auto_start_reg1'
         pAddr = auto_start_reg1['parsedAddress']
@@ -105,7 +105,7 @@ def test_stride():
         assert pAddr['value'] == [4, 0x104, 0x204, 0x304]
         
         # auto_start_reg2
-        # -1:stride:4:0x100
+        # -1:array:4:0x100
         auto_start_reg2 = registers[2]
         assert auto_start_reg2['name'] == 'auto_start_reg2'
         pAddr = auto_start_reg2['parsedAddress']
@@ -116,7 +116,7 @@ def test_stride():
         assert pAddr['value'] == [8, 0x108, 0x208, 0x308]
         
         # auto_start_auto_step_reg1
-        # -1:stride:4
+        # -1:array:4
         auto_start_auto_step_reg1 = registers[3]
         assert auto_start_auto_step_reg1['name'] == 'auto_start_auto_step_reg1'
         pAddr = auto_start_auto_step_reg1['parsedAddress']
@@ -127,7 +127,7 @@ def test_stride():
         assert pAddr['value'] == [0xc, 0xc+4, 0xc+8, 0xc+12]
         
         # auto_start_auto_step_reg2
-        # -1:stride:4
+        # -1:array:4
         auto_start_auto_step_reg2 = registers[4]
         assert auto_start_auto_step_reg2['name'] == 'auto_start_auto_step_reg2'
         pAddr = auto_start_auto_step_reg2['parsedAddress']

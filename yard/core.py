@@ -955,7 +955,7 @@ class DataBase():
     def _mapAddressRegister(self, reg, test=False):
         """ Map the address of a register.
         
-        This method fetch the address (or more addresses if this is a stride register) of the given
+        This method fetch the address (or more addresses if this is a array register) of the given
         register. If there is no address conflict (already used address, unaligned address) it
         inserts to `addressMap` dict, which holds all address and registers.
         """
@@ -1057,8 +1057,8 @@ class DataBase():
     @staticmethod
     def _getAddressValues(reg):
         """ Returns all address values of a register.
-        Note that 'stride' feature will place one register into multiple address. This will results
-        a true-list (with multiple element). If this register is a simple register (not stride) the
+        Note that 'array' feature will place one register into multiple address. This will results
+        a true-list (with multiple element). If this register is a simple register (not array) the
         return value will contain only one element (the address of this simple register).
         """
         startAddr = reg['parsedAddress']['start']
@@ -1097,7 +1097,7 @@ class DataBase():
                 The integer format can be deimal or hexadecimal (starts with '0x')
             - <-1> or None: This indicates automatic register address resolution. YARD can resolve
                 addresses. This is the recommended way.
-            - value[:stride:<count>[:<increment>]] indicates register-arrays. Value count and
+            - value[:array:<count>[:<increment>]] indicates register-arrays. Value count and
                 increment (if exists) must be integers. The value describes the start address, the
                 count indicates the size of the register-array. The increment indicates the
                 *address-differences* between the consecutive registers.
@@ -1112,14 +1112,14 @@ class DataBase():
         elif isinstance(address, str):
             try:
                 defaultIncrement = self.getDatawidth()/8
-                stridedata = address.split(':')
-                stridedata.append(defaultIncrement) # append default increment. This wont be used if the user give the increment
-                startAddr = int(float(stridedata[0]))
-                if stridedata[1].lower() != 'stride':
-                    logging.error('Error during parsing stride address in reg: %s. >stride< keyword exzpected >%s< given', reg['name'], stridedata[1].lower())
+                arraydata = address.split(':')
+                arraydata.append(defaultIncrement) # append default increment. This wont be used if the user give the increment
+                startAddr = int(float(arraydata[0]))
+                if arraydata[1].lower() != 'array':
+                    logging.error('Error during parsing array address in reg: %s. >array< keyword exzpected >%s< given', reg['name'], arraydata[1].lower())
                     raise Exception()
-                count = util.toInt(stridedata[2])
-                increment = util.toInt(stridedata[3])
+                count = util.toInt(arraydata[2])
+                increment = util.toInt(arraydata[3])
                 reg['parsedAddress']['start'] = startAddr
                 reg['parsedAddress']['count'] = count
                 reg['parsedAddress']['increment'] = increment
@@ -1134,12 +1134,12 @@ class DataBase():
         
     
     def rollOutStride(self):
-        """ This method rolls out the stride-registers (aka. register-arrays)
+        """ This method rolls out the array-registers (aka. register-arrays)
         
-        This method will creates *count* number copes of the stride-register. Each copy will get
+        This method will creates *count* number copes of the array-register. Each copy will get
         different serialNumber.
         
-        This is useful when the template/renderjob does not supporst stride-registers natively.
+        This is useful when the template/renderjob does not supporst array-registers natively.
         """
         for iface in self.data['interfaces']:
             for reg in iface['registers']:
